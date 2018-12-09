@@ -12,13 +12,20 @@ import os
 
 
 
+# login info
 email = ''# Tumblr account email
 username = ''# Tumblr account username
 password = ''# Tumblr account password
+
+
+
+# make_cookie.py
 cookie_path = os.path.join('cookie.txt')# Location to put the cookie file
 
 
-
+# list_following.py
+followed_xml_path = os.path.join('dl', 'followed.opml')# Location to store tumblr-provided xml followed list
+followed_list_path = os.path.join('dl', 'followed_list.txt')# Location to write list of followed blogs to
 
 
 
