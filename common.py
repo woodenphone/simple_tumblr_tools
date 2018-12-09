@@ -99,13 +99,13 @@ class FetchGot404(Exception):
     """Pass on that there was a 404"""
 
 def fetch(requests_session, url, method='get', data=None, expect_status=200, headers=None):
-#    headers = {'user-agent': user_agent}
-    user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+###    headers = {'user-agent': user_agent}
+##    user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+    user_agent = 'python-requests'
     if headers is None:
         headers = {'user-agent': user_agent}
     elif 'user-agent' not in headers.keys():
         headers['user-agent'] = user_agent
-
     if headers:
         headers.update(headers)
 
@@ -168,111 +168,6 @@ def read_file(file_path):
     return data
 # /The magic two IO functions
 
-
-def write_unicode_file(file_path, data):
-    """Write to an file in an existing folder.
-    Create dir if destination dir does not exist"""
-    data_out = data.encode('utf8')
-    # Ensure output dir exists
-    folder = os.path.dirname(file_path)
-    if folder:
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-    assert(os.path.exists(os.path.dirname(file_path)))
-    with open(file_path, 'wb') as f:
-        f.write(data_out)
-    return
-
-
-
-def convert_filepath_to_connect_string(filepath):
-    """Convert a SQLite file filepath to a SQLAlchemy connection string"""
-    # Convert windows-style backslashes to required forwardslashes
-    fp_fslash = re.sub(ur'\\\\', '/', filepath)
-    connect_string = u'sqlite:///{0}'.format(fp_fslash)
-    return connect_string
-
-
-def get_table_from_base(board_name, table_type):
-    """Get the a reference to a table.
-    Uses sqlalchemy Base."""
-    if table_type == u'boards':# Global tables
-        return Base.metadata.tables[u'{0}'.format(table_type)]
-    else:# Board-specific tables
-        return Base.metadata.tables[u'{0}_{1}'.format(board_name, table_type)]
-
-
-def please_utf(text):
-    """Ensure text is unicode"""
-    logging.info(u'text={0!r}'.format(text))
-    if type(text) is unicode:
-        return text
-    elif type(text) is str:
-        encoded = text.encode('utf8')
-        logging.info(u'encoded={0!r}'.format(encoded))
-        return encoded
-    elif type(text) is type(None):
-        return text
-    else:
-        logging.error('please_unicode() only accepts text objects')
-        raise ValueError()
-
-
-def generate_image_filepath_8ch(base, mtype, filename):
-    """Generate the filepath to use for storing a given filename.
-    Consists of variable prefix 'base' and detemanisticly generated subdir.
-    <base>/<MType>/<0,1>/<2,3>/<filename>
-    ex: 'foolfuuka/images/01/23/12345ABCDE.png'
-    TODO: Make more like asagi/foolfuuka for compatability.
-    """
-    return os.path.join(base, mtype, filename[0:2], filename[2:4], filename)
-
-
-def download_file(reqs_ses, url, filepath):
-    res = common.fetch(
-        requests_session=reqs_ses,
-        url=url,
-        method='get',
-        expect_status=200,
-    )
-    common.write_file(# Store page to disk
-        file_path=filepath,
-        data=res.content
-    )
-    logging.debug('Saved {0} to {1}'.format(url, filepath))
-    return
-
-
-def uniquify(seq, idfun=None):
-    # List uniquifier from
-    # http://www.peterbe.com/plog/uniqifiers-benchmark
-    # order preserving
-    if idfun is None:
-        def idfun(x): return x
-    seen = {}
-    result = []
-    for item in seq:
-        marker = idfun(item)
-        # in old Python versions:
-        # if seen.has_key(marker)
-        # but in new ones:
-        if marker in seen: continue
-        seen[marker] = 1
-        result.append(item)
-    return result
-
-
-def date_to_warosu(date):
-    """Convert datetime objects to YYYY-MM-DD strings for Warosu's Fuuka searh"""
-    return date.strftime('%Y-%m-%d')
-
-
-def convert_list_str_to_int(values):
-    """Convert a list of strings/unicode strings to a list of ints"""
-    out_list = []
-    for value in values:
-        out_list.append(int(value))
-    return out_list
 
 
 def main():
